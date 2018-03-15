@@ -1,0 +1,9 @@
+issues:
+  - title: issue title 1
+    assignee: &default assignee
+    labels:
+      - enhancement
+      - bug
+  - title: issue title 2
+    assignee: *default
+  - title: issue title 3

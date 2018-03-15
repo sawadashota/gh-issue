@@ -1,0 +1,12 @@
+version: '2'
+
+tasks:
+  bootstrap:
+    cmds:
+      - dep ensure -v
+  build:
+    cmds:
+      - go build .
+  run:
+    cmds:
+      - go run main.go create
