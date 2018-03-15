@@ -102,7 +102,7 @@ func (i *issueYaml) read() {
 }
 
 func (i *issueYaml) isYamlExtension() bool {
-	r := regexp.MustCompile(`\.(issueYaml|yml)$`)
+	r := regexp.MustCompile(`\.(yaml|yml)$`)
 	return r.MatchString(i.abs)
 }
 
