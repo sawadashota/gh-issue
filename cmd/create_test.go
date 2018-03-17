@@ -1,6 +1,9 @@
 package cmd
 
-import "testing"
+import (
+	"testing"
+	"regexp"
+)
 
 func TestContains(t *testing.T) {
 	var data interface{}
@@ -17,5 +20,17 @@ func TestContains02(t *testing.T) {
 
 	if contains(data, "bar") {
 		t.Error("Data has \"bar\"")
+	}
+}
+
+func TestGetToken(t *testing.T) {
+	token, err := getToken()
+	if err != nil {
+		t.Error(err)
+	}
+
+	r := regexp.MustCompile("^.+$")
+	if !r.MatchString(token) {
+		t.Errorf("Invalid Token: %v\n", token)
 	}
 }

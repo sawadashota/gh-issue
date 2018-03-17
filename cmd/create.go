@@ -10,6 +10,7 @@ import (
 	"gopkg.in/yaml.v2"
 	"fmt"
 	"github.com/sawadashota/gh-issue/ghissue"
+	"os/exec"
 )
 
 type issueYaml struct {
@@ -138,4 +139,27 @@ func contains(s interface{}, e string) bool {
 		}
 	}
 	return false
+}
+
+func getToken() (string, error) {
+	if !executable("envchain") {
+		NewWarning("Please install envchain", "https://github.com/sorah/envchain").Exec()
+		log.Fatal("Command envchain is not exists.")
+	}
+
+	command := exec.Command("envchain", "gh-issue", "env")
+	res, err := command.Output()
+
+	if err != nil {
+		return "", err
+	}
+
+	r := regexp.MustCompile(EnvchainEnv + `=(.+)`)
+	matches := r.FindStringSubmatch(string(res))
+
+	if len(matches) < 2 {
+		return "", fmt.Errorf("Cannot Find GITHUB_TOKEN\n")
+	}
+
+	return matches[1], nil
 }
