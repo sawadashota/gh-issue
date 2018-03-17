@@ -32,32 +32,39 @@ var Create = &cobra.Command{
 		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		issues := ghissue.New("aaa") // todo envchainからgh tokenを参照する
-		for _, issue := range i.body["issues"].([]interface{}) {
-			var ops []ghissue.Option
-
-			title, err := getString(issue, "title")
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			assignee, err := getString(issue, "assignee")
-			if err == nil {
-				ops = append(ops, ghissue.WithAssignee(assignee))
-			}
-
-			labels, err := getSlice(issue, "labels")
-
-			if err == nil {
-				for _, label := range labels {
-					ops = append(ops, ghissue.WithLabel(label))
-				}
-			}
-
-			issues.AddIssue(title, ops...)
-		}
-		fmt.Printf("%v\n", issues) // FIXME 消す
+		issues := issues("aaa", i.body["issues"].([]interface{})) // todo envchainからgh tokenを参照する
+		fmt.Printf("%v\n", issues)                                // FIXME 消す
 	},
+}
+
+// Yamlのissues以下を受け取り、構造体を返す
+func issues(token string, yaml []interface{}) *ghissue.Issues {
+	issues := ghissue.New(token)
+	for _, issue := range yaml {
+		var ops []ghissue.Option
+
+		title, err := getString(issue, "title")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		assignee, err := getString(issue, "assignee")
+		if err == nil {
+			ops = append(ops, ghissue.WithAssignee(assignee))
+		}
+
+		labels, err := getSlice(issue, "labels")
+
+		if err == nil {
+			for _, label := range labels {
+				ops = append(ops, ghissue.WithLabel(label))
+			}
+		}
+
+		issues.AddIssue(title, ops...)
+	}
+
+	return issues
 }
 
 // Yamlから値がstringの値を取り出す
