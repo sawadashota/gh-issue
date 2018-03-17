@@ -6,9 +6,9 @@ type Issues struct {
 }
 
 type Issue struct {
-	Title    string  `json:"title"`
-	Assignee string  `json:"assignee"`
-	Labels   []Label `json:"labels"`
+	Title    string
+	Assignee string
+	Labels   []Label
 }
 
 type Label struct {
@@ -37,13 +37,6 @@ func (i *Issues) AddIssue(title string, options ...Option) {
 func WithAssignee(assignee string) Option {
 	return func(issue *Issue) {
 		issue.Assignee = assignee
-	}
-}
-
-// Add Labels Option
-func WithLabels(labels []Label) Option {
-	return func(issue *Issue) {
-		issue.Labels = labels
 	}
 }
 
