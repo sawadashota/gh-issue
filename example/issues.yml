@@ -1,6 +1,9 @@
+alias:
+  assignee: &default default assignee
+
 issues:
   - title: issue title 1
-    assignee: &default assignee
+    assignee: assignee
     labels:
       - enhancement
       - bug

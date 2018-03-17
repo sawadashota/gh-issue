@@ -1,4 +1,4 @@
-package issue
+package ghissue
 
 type Issues struct {
 	Token  string
@@ -6,9 +6,9 @@ type Issues struct {
 }
 
 type Issue struct {
-	Title    string
-	Assignee string
-	Labels   []Label
+	Title    string  `json:"title"`
+	Assignee string  `json:"assignee"`
+	Labels   []Label `json:"labels"`
 }
 
 type Label struct {
@@ -44,5 +44,12 @@ func WithAssignee(assignee string) Option {
 func WithLabels(labels []Label) Option {
 	return func(issue *Issue) {
 		issue.Labels = labels
+	}
+}
+
+// Add Label Option
+func WithLabel(label string) Option {
+	return func(issue *Issue) {
+		issue.Labels = append(issue.Labels, Label{label})
 	}
 }
