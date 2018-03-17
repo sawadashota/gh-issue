@@ -29,6 +29,7 @@ var Set = &cobra.Command{
 		}
 
 
+		// TODO 実装する
 		command := exec.Command("envchain", "--set", "--no-require-passphrase", EnvchainNamespace, EnvchainEnv)
 		_, err := command.Output()
 		if err != nil {

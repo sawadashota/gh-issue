@@ -33,8 +33,13 @@ var Create = &cobra.Command{
 		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		issues := issues("aaa", i.body["issues"].([]interface{})) // todo envchainからgh tokenを参照する
-		fmt.Printf("%v\n", issues)                                // FIXME 消す
+		token, err := getToken()
+		if err != nil {
+			log.Fatal(err)
+		}
+		
+		issues := issues(token, i.body["issues"].([]interface{}))
+		fmt.Printf("%v\n", issues) // FIXME 消す
 	},
 }
 
