@@ -41,7 +41,7 @@ func client(client *github.Client, ctx context.Context, owner string, repo strin
 
 // Call GitHub API and create issue
 func (i *Issue) Create(issueCreator issueCreator) *Result {
-	result := &Result{Issue: i}
+	result := &Result{Issue: *i}
 
 	issueRequest := &github.IssueRequest{
 		Title: &i.Title,

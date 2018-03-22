@@ -48,8 +48,27 @@ var Create = &cobra.Command{
 		}
 
 		issues := issues(owner, repo, token, i.body["issues"].([]interface{}))
-		issues.Create()
+		results := issues.Create()
+
+		stdoutAllError(results)
 	},
+}
+
+func stdoutAllError(results *[]ghissue.Result) {
+	errCount := 0
+	for _, result := range *results {
+		if result.HasError() {
+			errCount++
+
+			if errCount == 1 {
+				eloquent.NewError("\n************* Error List *************\n\n").Important().Exec()
+			}
+
+			eloquent.NewError("%d. %v\n%v\n\n", errCount, result.Issue.Title, result.Error.Error()).Exec()
+		}
+	}
+
+	eloquent.NewError("%d errors occurred.\n", errCount).Important().Exec()
 }
 
 // Yamlのissues以下を受け取り、構造体を返す
@@ -95,7 +114,7 @@ func getString(yaml interface{}, key string) (string, error) {
 		}
 	}
 
-	return "", fmt.Errorf("key: %v is not exist", key)
+	return "", fmt.Errorf("key: \"%v\" is not exist in yaml file", key)
 }
 
 // Yamlから値が[]stringの値を取り出す

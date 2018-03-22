@@ -14,5 +14,7 @@ issues:
       - enhancement
       - bug
   - title: issue title 2
-    assignee: *default
   - title: issue title 3
+    assignee: *default
+  - title: issue title 4
+    assignee: *default
