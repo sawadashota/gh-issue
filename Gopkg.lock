@@ -42,6 +42,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/mattn/go-pipeline"
+  packages = ["."]
+  revision = "cfb87a531e2beb376fe3ce94a6dfef7956d33bc7"
+
+[[projects]]
+  branch = "master"
   name = "github.com/prometheus/common"
   packages = ["log"]
   revision = "6fb6fce6f8b75884b92e1889c150403fc0872c5e"
@@ -87,9 +93,15 @@
   revision = "947dcec5ba9c011838740e680966fd7087a71d0d"
   version = "v2.2.6"
 
+[[projects]]
+  name = "gopkg.in/yaml.v2"
+  packages = ["."]
+  revision = "7f97868eec74b32b0982dd158a51a446d1da7eb5"
+  version = "v2.1.1"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d1387676697b1b071f3ca8152d419388381cbdfd6120a0aceb025b62a82533d4"
+  inputs-digest = "ece1ea9aca245ca479f154e30efdef8f33f2f790b0efb0618946e5d1ef006667"
   solver-name = "gps-cdcl"
   solver-version = 1

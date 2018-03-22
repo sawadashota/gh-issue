@@ -3,7 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"github.com/prometheus/common/log"
-	"os/exec"
+	"github.com/mattn/go-pipeline"
 )
 
 const (
@@ -15,7 +15,10 @@ var Set = &cobra.Command{
 	Use:   "set",
 	Short: "Store GitHub token to envchain",
 	Long: `Store GitHub token to envchain
-  https://github.com/sorah/envchain`,
+  https://github.com/sorah/envchain
+
+  You can check current env following command.
+    $ envchain gh-issue env | grep GITHUB_TOKEN`,
 	Args: cobra.MaximumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		if !executable("envchain") {
@@ -28,14 +31,20 @@ var Set = &cobra.Command{
 			log.Fatal(cmd.Help())
 		}
 
-
-		// TODO 実装する
-		command := exec.Command("envchain", "--set", "--no-require-passphrase", EnvchainNamespace, EnvchainEnv)
-		_, err := command.Output()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		println(token)
+		execSet(token)
+		NewSuccess("Set GitHub token successfully\n\n").Exec()
+		NewSuccess("You can check env following.\n").Exec()
+		NewSuccess("  $ envchain gh-issue env | grep GITHUB_TOKEN.\n").Exec()
 	},
+}
+
+func execSet(gitHubToken string) {
+	_, err := pipeline.Output(
+		[]string{"echo", gitHubToken},
+		[]string{"envchain", "--set", "--no-require-passphrase", EnvchainNamespace, EnvchainEnv},
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 }
