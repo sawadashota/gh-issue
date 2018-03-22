@@ -1,4 +1,4 @@
-package cmd
+package eloquent
 
 import (
 	"github.com/fatih/color"

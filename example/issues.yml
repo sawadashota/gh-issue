@@ -1,9 +1,15 @@
 alias:
-  assignee: &default default assignee
+  assignee: &default default dummy-assignee
 
 issues:
   - title: issue title 1
-    assignee: assignee
+    assignee: sawadashota
+    body: |-
+      Example title
+      ===
+      Example body
+
+      * Example list
     labels:
       - enhancement
       - bug

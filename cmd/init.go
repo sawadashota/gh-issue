@@ -1,10 +1,11 @@
 package cmd
 
 import (
+	"fmt"
+	"github.com/prometheus/common/log"
+	"github.com/sawadashota/gh-issue/eloquent"
 	"github.com/spf13/cobra"
 	"os"
-	"github.com/prometheus/common/log"
-	"fmt"
 	"os/exec"
 )
 
@@ -30,7 +31,7 @@ var InitCmd = &cobra.Command{
 // Create template yaml
 func createIssueFile() {
 	if existIssueFile() {
-		NewError("%v is already exists.\n", FileName).Exec()
+		eloquent.NewError("%v is already exists.\n", FileName).Exec()
 		os.Exit(1)
 	}
 
@@ -41,7 +42,7 @@ func createIssueFile() {
 	}
 
 	fmt.Fprintln(file, IssueFileTemplate)
-	NewSuccess("Created %v successfully\n", FileName).Exec()
+	eloquent.NewSuccess("Created %v successfully\n", FileName).Exec()
 }
 
 func existIssueFile() bool {
@@ -52,7 +53,7 @@ func existIssueFile() bool {
 // Stdout guide to install dependencies
 func stdoutDependencies() {
 	if !executable("envchain") {
-		NewWarning("Please install envchain", "https://github.com/sorah/envchain").Exec()
+		eloquent.NewWarning("Please install envchain", "https://github.com/sorah/envchain").Exec()
 	}
 }
 

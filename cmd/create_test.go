@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"testing"
 	"regexp"
+	"testing"
 )
 
 func TestContains(t *testing.T) {

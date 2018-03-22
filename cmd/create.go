@@ -1,16 +1,17 @@
 package cmd
 
 import (
+	"fmt"
+	"github.com/sawadashota/gh-issue/eloquent"
+	"github.com/sawadashota/gh-issue/ghissue"
 	"github.com/spf13/cobra"
-	"os"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
 	"log"
+	"os"
+	"os/exec"
 	"path"
 	"regexp"
-	"io/ioutil"
-	"gopkg.in/yaml.v2"
-	"fmt"
-	"github.com/sawadashota/gh-issue/ghissue"
-	"os/exec"
 )
 
 type issueYaml struct {
@@ -22,7 +23,7 @@ type issueYaml struct {
 var i *issueYaml
 
 var Create = &cobra.Command{
-	Use:   "create -f [filepath]",
+	Use:   "create -f [filepath] -o [owner] -r [repository]",
 	Short: "Create issue at GitHub",
 	Long:  `Create issue at GitHub`,
 	Args:  cobra.MaximumNArgs(0),
@@ -31,21 +32,29 @@ var Create = &cobra.Command{
 		if !i.isYamlExtension() {
 			log.Fatal("File extension should be issueYaml or yml")
 		}
+
+		if owner == "" {
+			log.Fatal("[-o --owner] Owner should be present")
+		}
+
+		if repo == "" {
+			log.Fatal("[-r --repo] Repository should be present")
+		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		token, err := getToken()
 		if err != nil {
 			log.Fatal(err)
 		}
-		
-		issues := issues(token, i.body["issues"].([]interface{}))
-		fmt.Printf("%v\n", issues) // FIXME 消す
+
+		issues := issues(owner, repo, token, i.body["issues"].([]interface{}))
+		issues.Create()
 	},
 }
 
 // Yamlのissues以下を受け取り、構造体を返す
-func issues(token string, yaml []interface{}) *ghissue.Issues {
-	issues := ghissue.New(token)
+func issues(owner string, repo string, token string, yaml []interface{}) *ghissue.Issues {
+	issues := ghissue.New(owner, repo, token)
 	for _, issue := range yaml {
 		var ops []ghissue.Option
 
@@ -57,6 +66,11 @@ func issues(token string, yaml []interface{}) *ghissue.Issues {
 		assignee, err := getString(issue, "assignee")
 		if err == nil {
 			ops = append(ops, ghissue.WithAssignee(assignee))
+		}
+
+		body, err := getString(issue, "body")
+		if err == nil {
+			ops = append(ops, ghissue.WithBody(body))
 		}
 
 		labels, err := getSlice(issue, "labels")
@@ -148,7 +162,7 @@ func contains(s interface{}, e string) bool {
 
 func getToken() (string, error) {
 	if !executable("envchain") {
-		NewWarning("Please install envchain", "https://github.com/sorah/envchain").Exec()
+		eloquent.NewWarning("Please install envchain", "https://github.com/sorah/envchain").Exec()
 		log.Fatal("Command envchain is not exists.")
 	}
 
