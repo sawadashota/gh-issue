@@ -55,6 +55,13 @@ Installation
 ---
 
 ```bash
+brew tap sawadashota/homebrew-cheers
+brew install gh-issue
+```
+
+or
+
+```bash
 go get -u github.com/sawadashota/gh-issue
 ```
 
