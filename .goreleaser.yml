@@ -1,5 +1,5 @@
 builds:
-  - main: main.go
+  - main: cmd/ghissue/main.go
     binary: gh-issue
     goos:
       - darwin

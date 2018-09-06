@@ -2,16 +2,17 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/sawadashota/gh-issue/eloquent"
-	"github.com/sawadashota/gh-issue/ghissue"
-	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
 	"path"
 	"regexp"
+
+	"github.com/sawadashota/gh-issue"
+	"github.com/sawadashota/gh-issue/eloquent"
+	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v2"
 )
 
 type issueYaml struct {

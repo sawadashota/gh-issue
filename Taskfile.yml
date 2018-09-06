@@ -1,6 +1,9 @@
 version: '2'
 
 tasks:
+  goimports:
+    cmds:
+      - goimports -w .
   bootstrap:
     cmds:
       - dep ensure -v

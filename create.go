@@ -2,10 +2,11 @@ package ghissue
 
 import (
 	"context"
+	"time"
+
 	"github.com/google/go-github/github"
 	"github.com/sawadashota/gh-issue/eloquent"
 	"golang.org/x/oauth2"
-	"time"
 )
 
 type issueCreator func(issueRequest *github.IssueRequest) (*github.Issue, *github.Response, error)

@@ -2,11 +2,12 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"os/exec"
+
 	"github.com/prometheus/common/log"
 	"github.com/sawadashota/gh-issue/eloquent"
 	"github.com/spf13/cobra"
-	"os"
-	"os/exec"
 )
 
 const (
