@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker: &docker
-      - image: circleci/golang:1.10.0
+      - image: circleci/golang:1.11.0
     working_directory: &working_directory /go/src/github.com/sawadashota/gh-issue
     steps:
       - checkout
