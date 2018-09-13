@@ -12,7 +12,11 @@ import (
 
 const (
 	FileName          = "issues.yml"
-	IssueFileTemplate = `issues:
+	IssueFileTemplate = `# auto created
+meta:
+  repo: owner/reponame
+
+issues:
   - title: issue title 1
     assignee: assignee
     labels:

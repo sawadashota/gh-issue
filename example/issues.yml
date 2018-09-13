@@ -1,6 +1,9 @@
 alias:
   assignee: &default default dummy-assignee
 
+meta:
+  repo: "sawadashota/gh-issue"
+
 issues:
   - title: issue title 1
     assignee: sawadashota

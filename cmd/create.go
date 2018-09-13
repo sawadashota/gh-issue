@@ -25,7 +25,7 @@ type issueYaml struct {
 var i *issueYaml
 
 var Create = &cobra.Command{
-	Use:   "create -f [filepath] -r [repository]",
+	Use:   "create -f [filepath]",
 	Short: "Create issue at GitHub",
 	Long:  `Create issue at GitHub`,
 	Args:  cobra.MaximumNArgs(0),
@@ -34,10 +34,6 @@ var Create = &cobra.Command{
 		if !i.isYamlExtension() {
 			log.Fatal("File extension should be issueYaml or yml")
 		}
-
-		if repo == "" {
-			log.Fatal("[-r --repo] Repository should be present")
-		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		token, err := getToken()
@@ -45,6 +41,11 @@ var Create = &cobra.Command{
 			log.Fatal(err)
 		}
 
+		meta := i.body["meta"].(interface{})
+		repo, err := getString(meta, "repo")
+		if err != nil {
+			log.Fatal(err)
+		}
 		o, r, err := splitOwnerRepo(repo)
 
 		if err != nil {
