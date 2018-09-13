@@ -24,6 +24,9 @@ Then, you will be required type password for access keychain.
 You can make template yaml file by `gh-issue init`
 
 ```yml
+meta:
+  repo: sawadashota/gh-issue
+
 issues:
   - title: issue title 1
     assignee: sawadashota
@@ -42,13 +45,13 @@ issues:
 ### Create issues on GitHub
 
 ```bash
-gh-issue create -f [path to yaml] -r [repository name]
+gh-issue create -f [path to yaml]
 ```
 
 For example
 
 ```bash
-gh-issue create -f ./issues.yml -r sawadashota/gh-issue
+gh-issue create -f ./issues.yml
 ```
 
 Installation
