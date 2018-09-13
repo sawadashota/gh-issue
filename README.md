@@ -42,13 +42,13 @@ issues:
 ### Create issues on GitHub
 
 ```bash
-gh-issue create -f [path to yaml] -o [repository owner] -r [repository name]
+gh-issue create -f [path to yaml] -r [repository name]
 ```
 
 For example
 
 ```bash
-gh-issue create -f ./issues.yml -o sawadashota -r gh-issue
+gh-issue create -f ./issues.yml -r sawadashota/gh-issue
 ```
 
 Installation

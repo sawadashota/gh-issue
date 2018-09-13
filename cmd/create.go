@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"path"
 	"regexp"
+	"strings"
 
 	"github.com/sawadashota/gh-issue"
 	"github.com/sawadashota/gh-issue/eloquent"
@@ -24,7 +25,7 @@ type issueYaml struct {
 var i *issueYaml
 
 var Create = &cobra.Command{
-	Use:   "create -f [filepath] -o [owner] -r [repository]",
+	Use:   "create -f [filepath] -r [repository]",
 	Short: "Create issue at GitHub",
 	Long:  `Create issue at GitHub`,
 	Args:  cobra.MaximumNArgs(0),
@@ -32,10 +33,6 @@ var Create = &cobra.Command{
 		i = newYaml(file)
 		if !i.isYamlExtension() {
 			log.Fatal("File extension should be issueYaml or yml")
-		}
-
-		if owner == "" {
-			log.Fatal("[-o --owner] Owner should be present")
 		}
 
 		if repo == "" {
@@ -48,11 +45,28 @@ var Create = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		issues := issues(owner, repo, token, i.body["issues"].([]interface{}))
+		o, r, err := splitOwnerRepo(repo)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		issues := issues(o, r, token, i.body["issues"].([]interface{}))
 		results := issues.Create()
 
 		stdoutAllError(results)
 	},
+}
+
+func splitOwnerRepo(repo string) (owner string, name string, err error) {
+	arr := strings.Split(repo, "/")
+	if len(arr) != 2 {
+		return "", "", fmt.Errorf("invalid repository name: %s", repo)
+	}
+
+	owner = arr[0]
+	name = arr[1]
+	return
 }
 
 func stdoutAllError(results *[]ghissue.Result) {
