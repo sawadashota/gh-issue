@@ -29,34 +29,39 @@ var Create = &cobra.Command{
 	Short: "Create issue at GitHub",
 	Long:  `Create issue at GitHub`,
 	Args:  cobra.MaximumNArgs(0),
-	PreRun: func(cmd *cobra.Command, args []string) {
-		i = newYaml(file)
-		if !i.isYamlExtension() {
-			log.Fatal("File extension should be issueYaml or yml")
-		}
-	},
 	Run: func(cmd *cobra.Command, args []string) {
 		token, err := getToken()
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		meta := i.body["meta"].(interface{})
-		repo, err := getString(meta, "repo")
-		if err != nil {
-			log.Fatal(err)
-		}
-		o, r, err := splitOwnerRepo(repo)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		issues := issues(o, r, token, i.body["issues"].([]interface{}))
-		results := issues.Create()
-
-		stdoutAllError(results)
+		createIssues(file, token)
 	},
+}
+
+func createIssues(fp, token string) error {
+	i = newYaml(fp)
+	if !i.isYamlExtension() {
+		return fmt.Errorf("file extension should be issueYaml or yml")
+	}
+
+	meta := i.body["meta"].(interface{})
+	repo, err := getString(meta, "repo")
+	if err != nil {
+		return err
+	}
+	o, r, err := splitOwnerRepo(repo)
+
+	if err != nil {
+		return err
+	}
+
+	issues := issues(o, r, token, i.body["issues"].([]interface{}))
+	results := issues.Create()
+
+	stdoutAllError(results)
+
+	return nil
 }
 
 func splitOwnerRepo(repo string) (owner string, name string, err error) {
@@ -149,8 +154,8 @@ func getSlice(yaml interface{}, key string) ([]string, error) {
 }
 
 // Set absolution path for issueYaml file
-func newYaml(file string) *issueYaml {
-	i := &issueYaml{input: file}
+func newYaml(fp string) *issueYaml {
+	i := &issueYaml{input: fp}
 
 	pwd, err := os.Getwd()
 
@@ -158,7 +163,11 @@ func newYaml(file string) *issueYaml {
 		log.Fatal(err)
 	}
 
-	i.abs = path.Join(pwd, i.input)
+	if strings.HasPrefix(fp, "/") {
+		i.abs = fp
+	} else {
+		i.abs = path.Join(pwd, i.input)
+	}
 	i.read()
 
 	return i

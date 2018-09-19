@@ -5,20 +5,20 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/prometheus/common/log"
 	"github.com/sawadashota/gh-issue/eloquent"
 	"github.com/spf13/cobra"
 )
 
 const (
 	FileName          = "issues.yml"
-	IssueFileTemplate = `# auto created
+	IssueFileTemplate = `# template
 meta:
   repo: owner/reponame
 
 issues:
   - title: issue title 1
     assignee: assignee
+    body: ""
     labels:
       - enhancement`
 )
@@ -28,30 +28,32 @@ var InitCmd = &cobra.Command{
 	Short: "Create issue file.",
 	Long:  `Create issue file.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		createIssueFile()
+		createIssueFile(FileName, IssueFileTemplate)
 		stdoutDependencies()
 	},
 }
 
 // Create template yaml
-func createIssueFile() {
-	if existIssueFile() {
-		eloquent.NewError("%v is already exists.\n", FileName).Exec()
-		os.Exit(1)
+func createIssueFile(path, template string) error {
+	if existIssueFile(path) {
+		return fmt.Errorf("%v is already exists.\n", path)
 	}
 
-	file, err := os.OpenFile(FileName, os.O_WRONLY|os.O_CREATE, 0666)
+	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE, 0666)
+	defer f.Close()
 
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
-	fmt.Fprintln(file, IssueFileTemplate)
-	eloquent.NewSuccess("Created %v successfully\n", FileName).Exec()
+	fmt.Fprintln(f, template)
+	eloquent.NewSuccess("Created %v successfully\n", path).Exec()
+
+	return nil
 }
 
-func existIssueFile() bool {
-	_, err := os.Stat(FileName)
+func existIssueFile(filepath string) bool {
+	_, err := os.Stat(filepath)
 	return err == nil
 }
 
