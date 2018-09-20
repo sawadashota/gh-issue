@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
 	"os/exec"
+
+	"github.com/sawadashota/gh-issue/issueyaml"
 
 	"github.com/sawadashota/gh-issue/eloquent"
 	"github.com/spf13/cobra"
@@ -28,33 +28,9 @@ var InitCmd = &cobra.Command{
 	Short: "Create issue file.",
 	Long:  `Create issue file.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		createIssueFile(FileName, IssueFileTemplate)
+		issueyaml.Create(issueyaml.FileName, issueyaml.DefaultTemplate)
 		stdoutDependencies()
 	},
-}
-
-// Create template yaml
-func createIssueFile(path, template string) error {
-	if existIssueFile(path) {
-		return fmt.Errorf("%v is already exists.\n", path)
-	}
-
-	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE, 0666)
-	defer f.Close()
-
-	if err != nil {
-		return err
-	}
-
-	fmt.Fprintln(f, template)
-	eloquent.NewSuccess("Created %v successfully\n", path).Exec()
-
-	return nil
-}
-
-func existIssueFile(filepath string) bool {
-	_, err := os.Stat(filepath)
-	return err == nil
 }
 
 // Stdout guide to install dependencies

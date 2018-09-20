@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/sawadashota/gh-issue/issueyaml"
+
 	"github.com/BurntSushi/toml"
 	"github.com/mitchellh/go-homedir"
 	"github.com/sawadashota/gh-issue/tmpfile"
@@ -71,7 +73,8 @@ var rootCmd = &cobra.Command{
 			log.Fatalln(err)
 		}
 
-		createIssueFile(issueFilePath, tc.Template)
+		_ = issueyaml.Create(issueFilePath, tc.Template)
+
 		err = tmpfile.New(tc.Editor, issueFilePath).Open(func() error {
 			token, err := getToken()
 			if err != nil {
