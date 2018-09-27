@@ -1,9 +1,12 @@
 package cmd
 
 import (
+	"os"
+
 	"github.com/mattn/go-pipeline"
 	"github.com/prometheus/common/log"
 	"github.com/sawadashota/gh-issue/eloquent"
+	"github.com/sawadashota/gh-issue/envchain"
 	"github.com/spf13/cobra"
 )
 
@@ -22,9 +25,9 @@ var Set = &cobra.Command{
     $ envchain gh-issue env | grep GITHUB_TOKEN`,
 	Args: cobra.MaximumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
-		if !executable("envchain") {
-			eloquent.NewWarning("Please install envchain", "https://github.com/sorah/envchain").Exec()
-			log.Fatal("Command envchain is not exists.")
+		if err := envchain.Executable(); err != nil {
+			eloquent.NewError(err.Error()).Exec()
+			os.Exit(1)
 		}
 
 		if token == "" {
