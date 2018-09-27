@@ -19,9 +19,11 @@ gh-issue set -t [GitHub token]
 
 Then, you will be required type password for access keychain.
 
-### Create `issues.yml`
+### Create Issues
 
-You can make template yaml file by `gh-issue init`
+Just `gh-issue`
+
+For example like this.
 
 ```yml
 meta:
@@ -42,16 +44,24 @@ issues:
   - title: issue title 2
 ```
 
-### Create issues on GitHub
+Saved and quit editor, then start creating issues on GitHub!
 
-```bash
-gh-issue create -f [path to yaml]
-```
+### Edit config
 
-For example
+Places `~/.config/gh-issue/config.toml`
 
-```bash
-gh-issue create -f ./issues.yml
+```toml
+editor = "vim"
+template = """# template
+meta:
+  repo: owner/reponame
+
+issues:
+  - title: issue title 1
+    assignee: assignee
+    body: ""
+    labels:
+      - enhancement"""
 ```
 
 Installation
