@@ -6,17 +6,7 @@ import (
 )
 
 const (
-	FileName        = "issues.yml"
-	DefaultTemplate = `# template
-meta:
-  repo: owner/reponame
-
-issues:
-  - title: issue title 1
-    assignee: assignee
-    body: ""
-    labels:
-      - enhancement`
+	FileName = "issues.yml"
 )
 
 // Create template yaml

@@ -1,10 +1,11 @@
 package cmd
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/sawadashota/gh-issue/config"
 
 	"github.com/BurntSushi/toml"
 	"github.com/mitchellh/go-homedir"
@@ -16,13 +17,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	ConfigDir         = "~/.config/gh-issue/"
-	ConfigFilename    = "config.toml"
-	DefaultConfFormat = `editor = "vim"
-template = """%s"""`
-	FileName = "issues.yml"
-)
+const ConfigDir = "~/.config/gh-issue/"
 
 var (
 	token string
@@ -58,13 +53,13 @@ var rootCmd = &cobra.Command{
 		}
 
 		issueFilePath := filepath.Join(baseDir, issueyaml.FileName)
-		configFilePath := filepath.Join(baseDir, ConfigFilename)
+		configFilePath := config.Path(baseDir)
 
 		if err != nil {
 			log.Fatalln(err)
 		}
 
-		err = generateDefaultConfIfNoExists(configFilePath)
+		err = config.Generate(configFilePath)
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -104,27 +99,6 @@ func baseDirAbs(baseDir string) (string, error) {
 	return baseDir, nil
 }
 
-func generateDefaultConfIfNoExists(path string) error {
-	if _, err := os.Stat(path); err == nil {
-		return nil
-	}
-
-	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE, 0666)
-	defer f.Close()
-
-	if err != nil {
-		return err
-	}
-
-	_, err = fmt.Fprintln(f, defaultConf())
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func readConfig(path string) (*tomlConfig, error) {
 	if _, err := os.Stat(path); err != nil {
 		return nil, err
@@ -136,10 +110,6 @@ func readConfig(path string) (*tomlConfig, error) {
 	}
 
 	return &conf, nil
-}
-
-func defaultConf() string {
-	return fmt.Sprintf(DefaultConfFormat, issueyaml.DefaultTemplate)
 }
 
 func createIssues(fp, token string) error {
