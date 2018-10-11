@@ -11,6 +11,23 @@ import (
 
 type issueCreator func(issueRequest *github.IssueRequest) (*github.Issue, *github.Response, error)
 
+func (gh *GitHub) IssueCreate() *[]Result {
+	var results []Result
+
+	issueCreator := client(github.NewClient(gh.httpclient), gh.ctx, gh.owner, gh.repo)
+
+	for k, issue := range gh.issues {
+		// GitHub allows to call api 5000 times per hour
+		if k != 0 {
+			time.Sleep(1 * time.Second)
+		}
+
+		results = append(results, *issue.Create(issueCreator))
+	}
+
+	return &results
+}
+
 // deprecated
 func (i *Issues) Create(ctx context.Context) *[]Result {
 	var results []Result

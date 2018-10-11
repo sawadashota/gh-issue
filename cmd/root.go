@@ -123,12 +123,12 @@ func createIssues(ctx context.Context, fp, token string) error {
 		return err
 	}
 
-	issues, err := y.Issues(token)
+	issues, err := y.Issues(ctx, token)
 	if err != nil {
 		return err
 	}
 
-	results := issues.Create(ctx)
+	results := issues.IssueCreate()
 
 	stdoutAllError(results)
 

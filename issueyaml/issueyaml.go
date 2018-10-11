@@ -1,6 +1,7 @@
 package issueyaml
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -41,13 +42,13 @@ func (y *Yaml) OwnerRepo() (owner string, name string, err error) {
 }
 
 // Yamlのissues以下を受け取り、構造体を返す
-func (y *Yaml) Issues(token string) (*ghissue.Issues, error) {
+func (y *Yaml) Issues(ctx context.Context, token string) (*ghissue.GitHub, error) {
 	repo, owner, err := y.OwnerRepo()
 	if err != nil {
 		return nil, err
 	}
 
-	issues := ghissue.NewIssues(owner, repo, token)
+	hub := ghissue.New(ctx, owner, repo, token)
 	for _, issue := range y.issues() {
 		var ops []ghissue.IssueOption
 
@@ -74,10 +75,10 @@ func (y *Yaml) Issues(token string) (*ghissue.Issues, error) {
 			}
 		}
 
-		issues.AddIssue(title, ops...)
+		hub.AddIssue(title, ops...)
 	}
 
-	return issues, nil
+	return hub, nil
 }
 
 // Set absolution path for issueYaml file

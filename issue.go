@@ -1,9 +1,15 @@
 package ghissue
 
-import "net/http"
+import (
+	"context"
+	"net/http"
+
+	"golang.org/x/oauth2"
+)
 
 type GitHub struct {
 	httpclient *http.Client
+	ctx        context.Context
 	owner      string
 	repo       string
 	token      string
@@ -12,9 +18,15 @@ type GitHub struct {
 
 type Option func(*GitHub)
 
-func New(owner string, repo string, token string, opts ...Option) *GitHub {
+func New(ctx context.Context, owner string, repo string, token string, opts ...Option) *GitHub {
+	ts := oauth2.StaticTokenSource(
+		&oauth2.Token{AccessToken: token},
+	)
+	client := oauth2.NewClient(ctx, ts)
+
 	hub := &GitHub{
-		httpclient: http.DefaultClient,
+		httpclient: client,
+		ctx:        ctx,
 		owner:      owner,
 		repo:       repo,
 		token:      token,
@@ -62,6 +74,7 @@ type Issue struct {
 
 type IssueOption func(*Issue)
 
+// deprecated
 func (i *Issues) AddIssue(title string, opts ...IssueOption) {
 	issue := &Issue{
 		Title: title,
@@ -72,6 +85,18 @@ func (i *Issues) AddIssue(title string, opts ...IssueOption) {
 	}
 
 	i.Issues = append(i.Issues, *issue)
+}
+
+func (gh *GitHub) AddIssue(title string, opts ...IssueOption) {
+	issue := &Issue{
+		Title: title,
+	}
+
+	for _, opt := range opts {
+		opt(issue)
+	}
+
+	gh.issues = append(gh.issues, *issue)
 }
 
 // Add Assignee IssueOption
