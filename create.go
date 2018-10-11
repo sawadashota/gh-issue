@@ -11,10 +11,9 @@ import (
 
 type issueCreator func(issueRequest *github.IssueRequest) (*github.Issue, *github.Response, error)
 
-func (i *Issues) Create() *[]Result {
+func (i *Issues) Create(ctx context.Context) *[]Result {
 	var results []Result
 
-	ctx := context.Background()
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: i.Token},
 	)

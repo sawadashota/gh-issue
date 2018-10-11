@@ -1,9 +1,11 @@
 package cmd
 
 import (
+	"context"
 	"log"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/sawadashota/gh-issue/config"
 
@@ -41,6 +43,8 @@ func RootCmd() *cobra.Command {
 var rootCmd = &cobra.Command{
 	Use: "gh-issue",
 	Run: func(cmd *cobra.Command, args []string) {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
 
 		if err := envchain.Executable(); err != nil {
 			eloquent.NewError(err.Error()).Exec()
@@ -77,7 +81,7 @@ var rootCmd = &cobra.Command{
 				return err
 			}
 
-			return createIssues(issueFilePath, token)
+			return createIssues(ctx, issueFilePath, token)
 		})
 
 		if err != nil {
@@ -112,7 +116,7 @@ func readConfig(path string) (*tomlConfig, error) {
 	return &conf, nil
 }
 
-func createIssues(fp, token string) error {
+func createIssues(ctx context.Context, fp, token string) error {
 	y, err := issueyaml.New(fp)
 
 	if err != nil {
@@ -124,7 +128,7 @@ func createIssues(fp, token string) error {
 		return err
 	}
 
-	results := issues.Create()
+	results := issues.Create(ctx)
 
 	stdoutAllError(results)
 

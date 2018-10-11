@@ -1,8 +1,11 @@
 package ghissue
 
 type Issues struct {
-	Owner  string
-	Repo   string
+	// deprecated: use GitHub
+	Owner string
+	// deprecated: use GitHub
+	Repo string
+	// deprecated: use GitHub
 	Token  string
 	Issues []Issue
 }

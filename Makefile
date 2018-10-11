@@ -3,6 +3,8 @@
 # https://gist.github.com/tadashi-aikawa/da73d277a3c1ec6767ed48d1335900f3
 .PHONY: $(shell grep -E '^[a-zA-Z_-]+:' $(MAKEFILE_LIST) | sed 's/://')
 
+test: ## run all test
+	go test -v ./...
 
 goimports: ## fix format by goimports
 	goimports -w .
