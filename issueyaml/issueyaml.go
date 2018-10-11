@@ -47,9 +47,9 @@ func (y *Yaml) Issues(token string) (*ghissue.Issues, error) {
 		return nil, err
 	}
 
-	issues := ghissue.New(owner, repo, token)
+	issues := ghissue.NewIssues(owner, repo, token)
 	for _, issue := range y.issues() {
-		var ops []ghissue.Option
+		var ops []ghissue.IssueOption
 
 		title, err := getString(issue, "title")
 		if err != nil {

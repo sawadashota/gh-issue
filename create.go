@@ -11,6 +11,7 @@ import (
 
 type issueCreator func(issueRequest *github.IssueRequest) (*github.Issue, *github.Response, error)
 
+// deprecated
 func (i *Issues) Create(ctx context.Context) *[]Result {
 	var results []Result
 
