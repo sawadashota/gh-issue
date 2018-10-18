@@ -65,6 +65,7 @@ var rootCmd = &cobra.Command{
 			log.Fatalln(err)
 		}
 
+		// TODO: select issue by peco
 		_ = issueyaml.Create(issueFilePath, tc.Template)
 
 		err = tmpfile.New(tc.Editor, issueFilePath).Open(func() error {
