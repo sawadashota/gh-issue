@@ -32,10 +32,10 @@ type tomlConfig struct {
 func RootCmd() *cobra.Command {
 	// flags for root
 
-	// flags for Set
-	Set.Flags().StringVarP(&token, "token", "t", "", "GitHub Token")
+	// flags for SetCmd
+	SetCmd.Flags().StringVarP(&token, "token", "t", "", "GitHub Token")
 
-	rootCmd.AddCommand(Set)
+	rootCmd.AddCommand(SetCmd, EditCmd)
 	return rootCmd
 }
 
@@ -54,10 +54,6 @@ var rootCmd = &cobra.Command{
 
 		issueFilePath := filepath.Join(baseDir, issueyaml.FileName)
 		configFilePath := config.Path(baseDir)
-
-		if err != nil {
-			log.Fatalln(err)
-		}
 
 		err = config.Generate(configFilePath)
 		if err != nil {

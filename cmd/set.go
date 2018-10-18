@@ -15,7 +15,7 @@ const (
 	EnvchainEnv       = "GITHUB_TOKEN"
 )
 
-var Set = &cobra.Command{
+var SetCmd = &cobra.Command{
 	Use:   "set",
 	Short: "Store GitHub token to envchain",
 	Long: `Store GitHub token to envchain
@@ -36,7 +36,7 @@ var Set = &cobra.Command{
 		}
 
 		execSet(token)
-		eloquent.NewSuccess("Set GitHub token successfully\n\n").Exec()
+		eloquent.NewSuccess("SetCmd GitHub token successfully\n\n").Exec()
 		eloquent.NewSuccess("You can check env following.\n").Exec()
 		eloquent.NewSuccess("  $ envchain gh-issue env | grep GITHUB_TOKEN.\n").Exec()
 	},
