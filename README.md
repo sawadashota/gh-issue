@@ -14,14 +14,17 @@ Usage
 ### Set GitHub token
 
 ```bash
-gh-issue set -t [GitHub token]
+$ gh-issue set -t [GitHub token]
 ```
 
 Then, you will be required type password for access keychain.
 
 ### Create Issues
 
-Just `gh-issue`
+```bash
+$ gh-issue
+```
+
 
 For example like this.
 
@@ -48,7 +51,9 @@ Saved and quit editor, then start creating issues on GitHub!
 
 ### Edit config
 
-Places `~/.config/gh-issue/config.toml`
+```bash
+$ gh-issue edit
+```
 
 ```toml
 editor = "vim"
