@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"time"
 
 	"github.com/sawadashota/gh-issue/config"
 
@@ -43,9 +42,6 @@ func RootCmd() *cobra.Command {
 var rootCmd = &cobra.Command{
 	Use: "gh-issue",
 	Run: func(cmd *cobra.Command, args []string) {
-		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		defer cancel()
-
 		if err := envchain.Executable(); err != nil {
 			eloquent.NewError(err.Error()).Exec()
 			os.Exit(1)
@@ -81,6 +77,7 @@ var rootCmd = &cobra.Command{
 				return err
 			}
 
+			ctx := context.Background()
 			return createIssues(ctx, issueFilePath, token)
 		})
 
