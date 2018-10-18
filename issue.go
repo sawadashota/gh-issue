@@ -45,26 +45,6 @@ func OptionHTTPClient(c *http.Client) Option {
 	}
 }
 
-// deprecated: use GitHub
-type Issues struct {
-	// deprecated: use GitHub
-	Owner string
-	// deprecated: use GitHub
-	Repo string
-	// deprecated: use GitHub
-	Token  string
-	Issues []Issue
-}
-
-// deprecated: use New
-func NewIssues(owner string, repo string, token string) *Issues {
-	return &Issues{
-		Owner: owner,
-		Repo:  repo,
-		Token: token,
-	}
-}
-
 type Issue struct {
 	Title    string
 	Assignee string
@@ -73,19 +53,6 @@ type Issue struct {
 }
 
 type IssueOption func(*Issue)
-
-// deprecated
-func (i *Issues) AddIssue(title string, opts ...IssueOption) {
-	issue := &Issue{
-		Title: title,
-	}
-
-	for _, opt := range opts {
-		opt(issue)
-	}
-
-	i.Issues = append(i.Issues, *issue)
-}
 
 func (gh *GitHub) AddIssue(title string, opts ...IssueOption) {
 	issue := &Issue{
