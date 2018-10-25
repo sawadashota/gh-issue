@@ -35,7 +35,7 @@ func RootCmd() *cobra.Command {
 	// flags for SetCmd
 	SetCmd.Flags().StringVarP(&token, "token", "t", "", "GitHub Token")
 
-	rootCmd.AddCommand(SetCmd, EditCmd)
+	rootCmd.AddCommand(SetCmd, EditCmd, RepoCmd)
 	return rootCmd
 }
 
