@@ -9,8 +9,11 @@ test: ## run all test
 goimports: ## fix format by goimports
 	goimports -w .
 
-ensure: ## install dev dependencies
-	dep ensure -v
+download: ## install dependencies
+	go mod download
+
+vendor:
+	go mod vendor
 
 install: ## install gh-issue command
 	go install github.com/sawadashota/gh-issue/cmd/gh-issue
