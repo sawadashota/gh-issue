@@ -22,8 +22,6 @@ jobs:
     docker: *docker
     working_directory: *working_directory
     steps:
-      - attach_workspace:
-          at: .
       - run:
           name: Install Dependencies
           command: go mod download
@@ -43,13 +41,8 @@ workflows:
   version: 2
   default:
     jobs:
-      - build:
-          filters:
-            tags:
-              only: /.*/
+      - build
       - release:
-          requires:
-            - build
           filters:
             tags:
               only: /.*/
