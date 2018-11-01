@@ -8,11 +8,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/sawadashota/gh-issue/config"
-
 	"github.com/BurntSushi/toml"
 	"github.com/mitchellh/go-homedir"
 	"github.com/sawadashota/gh-issue"
+	"github.com/sawadashota/gh-issue/config"
 	"github.com/sawadashota/gh-issue/eloquent"
 	"github.com/sawadashota/gh-issue/envchain"
 	"github.com/sawadashota/gh-issue/issueyaml"
@@ -117,6 +116,7 @@ func readConfig(path string) (*tomlConfig, error) {
 	return &conf, nil
 }
 
+// TODO: read from ./.git/config
 func (tc *tomlConfig) replaceVariable() error {
 	pwd, err := os.Getwd()
 	if err != nil {

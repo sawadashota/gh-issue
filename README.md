@@ -59,7 +59,7 @@ $ gh-issue edit
 editor = "vim"
 template = """# template
 meta:
-  repo: owner/reponame
+  repo: ${CURRENT_PROJECT}
 
 issues:
   - title: issue title 1
