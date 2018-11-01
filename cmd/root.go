@@ -2,9 +2,11 @@ package cmd
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/sawadashota/gh-issue/config"
 
@@ -18,7 +20,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const ConfigDir = "~/.config/gh-issue/"
+const (
+	ConfigDir = "~/.config/gh-issue/"
+)
 
 var (
 	token string
@@ -66,6 +70,9 @@ var rootCmd = &cobra.Command{
 		}
 
 		// TODO: select issue by peco
+		if err := tc.replaceVariable(); err != nil {
+			log.Fatalln(err)
+		}
 		_ = issueyaml.Create(issueFilePath, tc.Template)
 
 		err = tmpfile.New(tc.Editor, issueFilePath).Open(func() error {
@@ -108,6 +115,21 @@ func readConfig(path string) (*tomlConfig, error) {
 	}
 
 	return &conf, nil
+}
+
+func (tc *tomlConfig) replaceVariable() error {
+	pwd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+
+	dir, base := filepath.Split(pwd)
+
+	project := fmt.Sprintf("%s/%s", filepath.Base(dir), base)
+
+	tc.Template = strings.Replace(tc.Template, "${CURRENT_PROJECT}", project, -1)
+
+	return nil
 }
 
 func createIssues(ctx context.Context, fp, token string) error {
