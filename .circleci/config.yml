@@ -2,16 +2,18 @@ version: 2
 jobs:
   build:
     docker: &docker
-      - image: circleci/golang:1.11.0
+      - image: circleci/golang:1.11.1
+        environment:
+          GO111MODULE: "on"
     working_directory: &working_directory /go/src/github.com/sawadashota/gh-issue
     steps:
       - checkout
       - run:
-          name: Install dep
-          command: go get -u github.com/golang/dep/cmd/dep
-      - run:
           name: Install Dependencies
-          command: dep ensure -v
+          command: go mod download
+      - run:
+          name: Build
+          command: go build github.com/sawadashota/gh-issue/cmd/gh-issue
       - persist_to_workspace:
           root: .
           paths:
@@ -23,10 +25,19 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Install Dependencies
+          command: go mod download
+      - run:
           name: Install goreleaser
+          working_directory: /go
+          environment:
+            GO111MODULE: "off"
           command: go get -u github.com/goreleaser/goreleaser
       - run:
           name: Release
+          working_directory: *working_directory
+          environment:
+            GO111MODULE: "on"
           command: goreleaser
 workflows:
   version: 2
